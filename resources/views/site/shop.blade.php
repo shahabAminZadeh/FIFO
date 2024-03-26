@@ -1,0 +1,224 @@
+@extends('site.master')
+@section('main_content')
+<div class="header-bg header-bg-page">
+    <div class="header-padding position-relative">
+        <div class="header-page-shape">
+            <div class="header-page-shape-item">
+                <img src="{{asset('site/assets/images/header-shape-1.png')}}" alt="shape">
+            </div>
+            <div class="header-page-shape-item">
+                <img src="{{asset('site/assets/images/header-shape-2.png')}}" alt="shape">
+            </div>
+            <div class="header-page-shape-item">
+                <img src="{{asset('site/assets/images/header-shape-3.png')}}" alt="shape">
+            </div>
+            <div class="header-page-shape-item">
+                <img src="{{asset('site/assets/images/header-shape-1.png')}}" alt="shape">
+            </div>
+            <div class="header-page-shape-item">
+
+            </div>
+            <div class="header-page-shape-item">
+                <img src="{{asset('site/assets/images/header-shape-1.png')}}" alt="shape">
+            </div>
+            <div class="header-page-shape-item">
+
+            </div>
+        </div>
+        <div class="container">
+            <div class="header-page-content">
+                <h1>فروشگاه</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">صفجه اصلی</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">فروشگاه</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="shop-section pt-100 pb-70 bg-black">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-9 col-lg-9 pb-30">
+                <div class="product-list-header">
+                    <div class="product-list-header-item">
+                        <div class="product-list-result">
+                            <p>نمایش محصولات 1تا6 از 36 محصول</p>
+                        </div>
+                    </div>
+                    <div class="product-list-header-item">
+                        <div class="product-list-action">
+                            <div class="product-list-form">
+                                <form>
+                                    <select>
+                                        <option value="popularity">مرتب سازی بر اساس محبوبیت</option>
+                                        <option value="lowtohigh">مرتب سازی بر اساس قیمت کم</option>
+                                        <option value="hightolow">مرتب سازی بر اساس قیمت زیاد</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <div class="row">
+                        @foreach($Products as $Product)
+                        <div class="col-sm-12 col-md-6 col-lg-4 pb-30">
+                            <div class="product-card product-card-dark">
+                                <div class="product-card-thumb">
+                                    <div class="product-card-thumb-inner">
+                                        <img src="{{asset('uploads/'.$Product->image)}}" alt="product">
+                                        <div class="product-card-button">
+                                            <a href="{{route('site.addToCart',['Product'=>$Product->id])}}" class="btn btn-yellow">افزودن به سبد خرید</a>
+                                            @auth()
+                                                @if($Product->checkWishList(auth()->id()))
+                                                <a href="{{route('site.removeFromWishlist',['Product'=>$Product->id])}}"><i class="flaticon-heart"></i>حذف از علاقه مندی ها</a>
+                                                @else
+                                                <a href="{{route('site.addToWishlist',['Product'=>$Product->id])}}"><i class="flaticon-heart"></i>اضافه کردن به علاقه مندی ها</a>
+                                                @endif
+                                            @else
+                                                <a href="{{route('site.addToWishlist',['Product'=>$Product->id])}}"><i class="flaticon-heart"></i>علاقه مندی ها</a>
+                                            @endauth
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-card-content">
+                                    <h3><a href="{{route('showProduct',['Product'=>$Product->id])}}">{{$Product->name}}</a></h3>
+                                    <h4 class="product-price">{{$Product->price}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                            <div class="page-pagination">
+                                <nav aria-label="pagination">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled">
+                                            <span class="page-link"><i class="flaticon-left-arrow-1"></i></span>
+                                        </li>
+                                        <li class="page-item active">
+                                        <span class="page-link">
+                                            1
+                                            <span class="sr-only">(current)</span>
+                                        </span>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#"><i class="flaticon-next"></i></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3 pb-30">
+                <div class="sidebar-item around-border sidebar-search">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="جستجو">
+                            <button><i class="flaticon-loupe"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="sidebar-item mb-30">
+                    <div class="sidebar-title">
+                        <h3 class="color-white">فیلتر بر اساس قیمت</h3>
+                    </div>
+                    <div class="sidebar-content">
+                        <form class="price-range-content">
+                            <div class="price-range-bar" id="range-slider"></div>
+                            <div class="price-range-filter">
+                                <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
+                                    <button class="btn btn-small">فیلتر</button>
+                                </div>
+                                <div class="price-range-filter-item d-flex align-items-center text-end order-1 order-xl-2">
+                                    <h4>قیمت</h4>
+                                    <input type="text" id="price-amount" readonly>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-title">
+                        <h3 class="color-white">دسته بندی</h3>
+                    </div>
+                    <ul class="sidebar-list">
+                        @foreach($Categories as $Category)
+                        <li>
+                            <a href="{{route('shop',['Category'=>$Category->id])}}" >{{$Category->name}}<span>({{$Category->products->count()}})</span></a>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-title">
+                        <h3 class="color-white">محبوب ترین ها</h3>
+                    </div>
+                    <div class="sidebar-recent-post">
+                        <div class="sidebar-recent-item">
+                            <div class="sidebar-recent-thumb">
+                                <a href="#"><img src="{{asset('site/assets/images/blog-nav-1.jpg')}}" alt="blog"></a>
+                            </div>
+                            <div class="sidebar-recent-content">
+                                <h3><a href="#">پیتزا پپرونی</a></h3>
+                                <h4 class="product-price">20 هزار</h4>
+                            </div>
+                        </div>
+                        <div class="sidebar-recent-item">
+                            <div class="sidebar-recent-thumb">
+                                <a href="#"><img src="{{asset('site/assets/images/blog-nav-4.jpg')}}" alt="blog"></a>
+                            </div>
+                            <div class="sidebar-recent-content">
+                                <h3><a href="#">پیتزا پپرونی</a></h3>
+                                <h4 class="product-price">20 هزار</h4>
+                            </div>
+                        </div>
+                        <div class="sidebar-recent-item">
+                            <div class="sidebar-recent-thumb">
+                                <a href="#"><img src="{{asset('site/assets/images/blog-nav-3.jpg')}}" alt="blog"></a>
+                            </div>
+                            <div class="sidebar-recent-content">
+                                <h3><a href="#">پیتزا پپرونی</a></h3>
+                                <h4 class="product-price">20 هزار</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="subscribe-section mural-bg pt-100 pb-70 bg-main">
+    <div class="container">
+        <div class="subscribe-grid">
+            <div class="subscribe-item">
+                <div class="section-title text-center text-lg-start m-0">
+                    <h2 class="color-white">عضویت در خبرنامه </h2>
+                    <p>با عضویت در خبرنامه از اخبار و مطالب ما با خبر شوید.</p>
+                </div>
+            </div>
+            <div class="subscribe-item">
+                <div class="subscribe-form">
+                    <form class="newsletter-form newsletter-form-white" data-bs-toggle="validator">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="email" id="emails" class="form-control" placeholder="آدرس ایمیل را وارد کنید*" name="EMAIL" required autocomplete="off">
+                            </div>
+                            <button class="btn btn-yellow" type="submit">عضویت <i class="flaticon-right-arrow-sketch-1"></i></button>
+                        </div>
+                        <div id="validator-newsletter" class="form-result color-white"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endsection
